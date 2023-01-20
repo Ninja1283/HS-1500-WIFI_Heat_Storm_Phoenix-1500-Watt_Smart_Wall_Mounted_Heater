@@ -39,20 +39,23 @@ Like many Tuya IOT devices, this unit has one Tuya MCU to handle the actual mach
 There are a pair of good guides on how to obtain the DP IDs [here](https://linkdhome.com/articles/local-tuya-device-control-in-homekit) and [here](https://www.zigbee2mqtt.io/advanced/support-new-devices/03_find_tuya_data_points.html). The first method is a bit eaiser, but I've found that it often misses some of the DP IDs.
 
 Once you have your account setup and your devices added, select "Cloud" --> "Development" from the left menu:
-![Development](https://imgur.com/hHxBilu)
+![Development](https://i.imgur.com/hHxBilu.png)
 
 From there, select your project, and you will be taken to the "Overview":
-![Overview](https://imgur.com/ALP7OYM)
+![Overview](https://i.imgur.com/8RxniO2.png)
 
 Select the "Devices" tab at the far right:
-![Devices](https://imgur.com/8RxniO2)
+![Devices](https://i.imgur.com/8RxniO2.png)
 
 Record your "Device ID". You'll need it for the next steps. If you're using the Local Tuya Integration, you'll also need to enter it when setting up the Integration in HA.
 
+Click on the "Debug Device" Link at the far right:
+![Debug Device](https://i.imgur.com/rqRclTH.png)
+
 Next, navigate to "Cloud" --> "API Explorer":
-![API Explorer Navigation](https://imgur.com/JiSNpJh)
+![API Explorer Navigation](https://i.imgur.com/JiSNpJh.png)
 
 This should open the API Explorer in a new window/tab:
-![API Explorer Window](https://imgur.com/kH16TVv)
+![API Explorer Window](https://i.imgur.com/kH16TVv.png)
 
 Enter the "Device ID" you recorded in the previous step
