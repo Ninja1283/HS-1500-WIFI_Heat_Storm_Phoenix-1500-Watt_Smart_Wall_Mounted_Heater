@@ -55,6 +55,8 @@ From there, select your project, and you will be taken to the "Overview":
 
 ![Overview](https://i.imgur.com/bD8pIab.png)
 
+If you are running the Official Tuya Integration, record your "Access ID" and "Access Secret". You'll need them both to set up the integration. Along with the credentials to log in to the Tuya/SmartLife app, this is all you will need, and can disregard the rest of the information here, as long as your devices are showing up in the devices tab below:
+
 Select the "Devices" tab at the far right:
 
 ![Devices](https://i.imgur.com/8RxniO2.png)
@@ -219,6 +221,36 @@ As an example, the following string would turn on the heater every day at 0600h,
 
 I will be using this heater in conjunction with Home Assistant, so I will not need the standalone scheduling functionality, and will skip it for the sake of simplicity.
 
+### Tuya Summary
+
+After all of the Tuya navigation, you should now have the following information:
+- Access ID
+- Access Secret
+- Device ID
+- Local Key
+- List of DP IDs with their matching device functions
+
+This should cover everything you need from Tuya to set up any of the three Integrations:
+
+**Official Tuya Integration:**
+![Official Tuya Integration Setup Screen](https://i.imgur.com/kivCL4f.png)
+- Country = Your Country
+- Access ID = Access ID from above
+- Access Secret = Access Secret from above
+- Account = Email that you use to log in to the Tuya/SmartLife App (ie, not the email you used to set up the IoT Platform.
+- Password = Password that you use to log in to the Tuya/SmartLife App (ie, not the password you used to set up the IoT Platform.
+
+**Local Tuya Integration:**
+![Local Tuya Integration Setup Screen](https://i.imgur.com/1EhckPy.png)
+- Name = Name for your device (however you want it to show up in HA)
+- Local key = Local Key from above
+- Host = Local IP Address of your device
+- Device ID = Device ID from above
+DP IDs from above to map to entity types
+
+**ESPHome**
+You will need the DP IDs to set up your entities in the yaml configuration.
+
 ## Hardware and Disassembly
 ### Product Information
 The product in question is [this](https://heatstorm.com/collections/wall-heaters/products/phoenix-wifi-smart-heater) Wifi-enabled 1500W infrared heater. Product manual can be found [here](https://cdn.shopify.com/s/files/1/1873/7325/files/HS-1500PHX-WIFI_Manual-compressed.pdf).
@@ -284,39 +316,79 @@ ESP-12F MCU installed:
 #### Software: ESPHome
 Once you have the Tuya module desoldered, you will need to flash the new Espressif module with your ESPHome yaml code before installing.
 
-If you don't already have the ESPhome Integration installed in Home Assistant, you can install it following [these](https://esphome.io/guides/getting_started_hassio.html) steps. You'll also want to set up your secrets file
+If you don't already have the ESPhome Integration installed in Home Assistant, you can install it following [these](https://esphome.io/guides/getting_started_hassio.html) steps. You'll also want to set up your secrets file if you have not done so already.
 
-Once you have the Integration set up and running, open it up, and click the "New Device" button:
+Once you have the Integration set up and running, open it up, and click on "Secrets" in the top right corner:
+![Secrets](https://i.imgur.com/RVaLO36.png)
 
-![ESPHome New Device](https://esphome.io/_images/dashboard_empty.png)
+Paste in the following information, replacing the text inside the quotes with your credentials:
+```
+# Wifi
+wifi_ssid: "YOUR_WIFI_SSID"
+wifi_password: "YOUR_WIFI_PASSWORD"
 
-This will pop up with a "New Device" Window. Select "Continue":
+# OTA
+ota_password: "Password of your choosing for OTA Updates"
 
-![New Device Window](https://i.imgur.com/HPYwSRp.png)
+# Device Keys
+heater_key: "Password of your choosing for API Encryption"
+```
+Once that is completed, connect your ESP Module to your USB-Serial adapter and connect the USB adapter to your local PC. Using a Chromium-based browser (Chromium, Google Chrome, or Microsoft Edge) navigate to [ESPHome Web](https://web.esphome.io/) and click "Connect":
+![Connect](https://i.imgur.com/57F7M7N.png)
 
-Give your new device a name and click "Next":
+Select your USB Port:
+![Serial Port Linux](https://i.imgur.com/6cJDKTV.png)
 
-![Create Configuration](https://i.imgur.com/JFs3ZDO.png)
+(Linux)
 
-Select your device type and click "Next":
+![Serial Port Windows](https://i.imgur.com/DhTN1eu.png)
 
-![Select your device type](https://i.imgur.com/ECXSRj2.png)
+(Windows)
 
-I'm using an ESP8266 based ESP-12F, so I selected ESP8266, but make sure you select the correct device type according to the Espressif MCU you are using.
+This will return you back to your "ESP Device" page. Click "Prepare for first use":
+![Prep for first use](https://i.imgur.com/FwkG6hh.png)
 
-This will open up a "Configuration created!" message. Click on the "Encryption key" to copy it to the clipboard, and then click "Skip":
+Click "Install":
+![Install](https://i.imgur.com/clOPZ5B.png)
 
-![Configuration created!](https://i.imgur.com/u8Gtmt6.png)
+Click "Close"
+![Close](https://i.imgur.com/Q3P6AkW.png)
 
-This will close the prompt and take you back to the main ESPHome Page. Find your newly created device, and click the "Edit" button:
+This will bring up a new popup. Select "Connect to Wifi" and enter your credentials:
+![Connect to Wifi](https://i.imgur.com/77MfQrZ.png)
 
-![Edit](https://i.imgur.com/r9t5Wqd.png)
+If you get a serial error, you can manually connect to Wifi by clicking the three dots and selecting "Configure Wifi":
+![Manual Connect to Wifi](https://i.imgur.com/30Cf65B.png)
+
+This should give you a "Provisioned!" message. Click "Close":
+![Provisioned](https://i.imgur.com/N1NbEkL.png)
+
+Click on "Logs". If they are blank like this, click "Reset Device", wait for it to connect to Wifi, and click "Close":
+![Reset Device](https://i.imgur.com/bpyRF4O.png)
+
+You can now close this window and navigate back to your ESPHome Integration Page. There should be a new Discovered Device available. (You may have to refresh the page.) Click "Adopt":
+![Adopt](https://i.imgur.com/Ra8CaM0.png)
+
+This should bring up an "Adopt Device" Prompt. Click "Adopt":
+![Adopt Device](https://i.imgur.com/jMnHw73.png)
+
+Once adoption is complete, you should get a "Configuration created" popup. Rename your device and click "Install":
+![Configuration created](https://i.imgur.com/V6qv4vM.png)
+
+Once you get the "SUCCESS" message at the bottom of the logs, you can click "Close":
+![Rename Device](https://i.imgur.com/GbtL7tJ.png)
+
+
+This will close the logs and take you back to the main ESPHome Page. Find your newly created device, and click the "Edit" button:
+
+![Edit](https://i.imgur.com/d3O4Z0n.png)
 
 This will open your heater.yaml (or whatever you named your device) yaml configuration file:
 
 ![Default heater.yaml](https://i.imgur.com/CE711To.png)
 
-Replace the contents of this file by pasting the contents of [heater.yaml](docs/heater.yaml) into this file:
+
+Replace the contents of this file by pasting the contents of [heater.yaml](docs/heater.yaml) into this file. If you're using an ESP32 based chip, make sure you edit the `esp8266:` line accordingly, replacing it with the appropriate `esp32:` [configuration](https://esphome.io/components/esp32.html).
 
 ![Pasted yaml](https://i.imgur.com/95tjsSr.png)
 
@@ -324,16 +396,6 @@ Click on "Save" then "Install" at the top right corner:
 
 ![Install](https://i.imgur.com/esrof32.png)
 
-This will open a new prompt. Select "Manual Download"
+This will open a new prompt. Select "Wirelessly"
 
-![Manual Download](https://i.imgur.com/VEQBWT9.png)
-
-In the version prompt, select "Legacy format":
-
-![Legacy Format](https://i.imgur.com/41znbhE.png)
-
-Save this to an easy to find location. You'll need this file to upload to your new ESP MCU.
-
-Instead of hardcoding sensitive data like Wifi credentials, OTA passwords, and API Encryption Keys, I use the secrets file to 
-
-#### Software: Uploading your YAML config
+![Wireless Install](https://i.imgur.com/sp11xbQ.png)
