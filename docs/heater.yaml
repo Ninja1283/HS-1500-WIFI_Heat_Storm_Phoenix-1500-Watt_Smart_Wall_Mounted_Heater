@@ -1,14 +1,15 @@
 # Global Subs:
 substitutions:
   display_name: heater
+  upper_display_name: Heater
   comment: Heat Storm HS-1500-WIFI 1500W Heater
-
+  
 esphome:
   name: ${display_name}
   comment: ${comment}
 
 esp8266:
-  board: esp01_1m
+  board: esp12e
 
 # Make sure logging is not using the serial port for Tuya commands
 logger:
@@ -20,7 +21,7 @@ api:
     key: !secret heater_key
 
 ota:
-  password: !secret password
+  password: !secret ota_password
 
 wifi:
   ssid: !secret wifi_ssid
@@ -42,13 +43,13 @@ uart:
 
 # Register the Tuya MCU connection and set ID for lambda calls
 tuya:
-  id: "tuya_heater"
+  id: tuya_heater
 
 # Controls
 climate:
   - platform: tuya
-    id: heater_climate_c
-    name: "Heater Controls (C)"
+    id: climate_c
+    name: ${upper_display_name} Controls (°C)
     switch_datapoint: 1
     target_temperature_datapoint: 2
     current_temperature_datapoint: 3
@@ -58,20 +59,20 @@ climate:
       max_temperature: 37
       temperature_step: 1.0
   - platform: tuya
-    id: heater_climate_f
-    name: "Heater Controls (F)"
+    id: climate_f
+    name: ${upper_display_name} Controls (°F)
     switch_datapoint: 1
     target_temperature_datapoint: 20
     current_temperature_datapoint: 21
     reports_fahrenheit: true
     visual:
-      min_temperature: 40
-      max_temperature: 99
+      min_temperature: 4.444
+      max_temperature: 37.222
       temperature_step: 1.0
 switch:
   - platform: "tuya"
     id: lock
-    name: "Child Lock"
+    name: ${upper_display_name} Child Lock
     icon: "mdi:account-lock-outline"
     switch_datapoint: 7
     inverted: true
@@ -80,7 +81,7 @@ switch:
 select:
   - platform: tuya
     id: mode
-    name: "Mode"
+    name: ${upper_display_name} Mode
     icon: "mdi:fan-auto"
     enum_datapoint: 4
     options:
@@ -90,7 +91,7 @@ select:
     optimistic: true
   - platform: tuya
     id: brightness
-    name: "Brightness"
+    name: ${upper_display_name} Brightness
     icon: "mdi:brightness-percent"
     enum_datapoint: 5
     options:
@@ -101,7 +102,7 @@ select:
     optimistic: true
   - platform: "tuya"
     id: temp_unit_convert
-    name: "Temperature Units"
+    name: ${upper_display_name} Temperature Units
     icon: "mdi:temperature-celsius"
     enum_datapoint: 19
     options:
@@ -112,7 +113,7 @@ select:
 binary_sensor:
   - platform: "tuya"
     id: fault
-    name: "Fault Alarm"
+    name: ${upper_display_name} Fault Alarm
     sensor_datapoint: 13
     icon: "mdi:alert-outline"
     device_class: "problem"
