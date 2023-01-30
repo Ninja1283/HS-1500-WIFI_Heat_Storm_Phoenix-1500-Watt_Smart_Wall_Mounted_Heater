@@ -2,7 +2,7 @@
 substitutions:
   display_name: heater
   upper_display_name: Heater
-  comment: Heat Storm HS-1500-WIFI 1500W Heater
+  comment: "Heat Storm HS-1500-WIFI 1500W Heater"
   
 esphome:
   name: ${display_name}
@@ -43,13 +43,13 @@ uart:
 
 # Register the Tuya MCU connection and set ID for lambda calls
 tuya:
-  id: tuya_heater
+  id: tuya_${display_name}
 
 # Controls
 climate:
   - platform: tuya
     id: climate_c
-    name: ${upper_display_name} Controls (°C)
+    name: "${upper_display_name} Controls (°C)"
     switch_datapoint: 1
     target_temperature_datapoint: 2
     current_temperature_datapoint: 3
@@ -72,7 +72,7 @@ climate:
 switch:
   - platform: "tuya"
     id: lock
-    name: ${upper_display_name} Child Lock
+    name: "${upper_display_name} Child Lock"
     icon: "mdi:account-lock-outline"
     switch_datapoint: 7
     inverted: true
@@ -91,7 +91,7 @@ select:
     optimistic: true
   - platform: tuya
     id: brightness
-    name: ${upper_display_name} Brightness
+    name: "${upper_display_name} Brightness"
     icon: "mdi:brightness-percent"
     enum_datapoint: 5
     options:
@@ -100,9 +100,9 @@ select:
       2: "50%"
       3: "100%"
     optimistic: true
-  - platform: "tuya"
+  - platform: tuya
     id: temp_unit_convert
-    name: ${upper_display_name} Temperature Units
+    name: "${upper_display_name} Temperature Units"
     icon: "mdi:temperature-celsius"
     enum_datapoint: 19
     options:
@@ -111,9 +111,9 @@ select:
 
 # Sensors
 binary_sensor:
-  - platform: "tuya"
+  - platform: tuya
     id: fault
-    name: ${upper_display_name} Fault Alarm
+    name: "${upper_display_name} Fault Alarm"
     sensor_datapoint: 13
     icon: "mdi:alert-outline"
     device_class: "problem"
